@@ -1,5 +1,7 @@
 #include "ShaderProgram.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 
 constexpr GLuint BUFFER_SIZE = 1024;
@@ -71,6 +73,11 @@ namespace Renderer
 	void ShaderProgram::setInt(const std::string& name, const GLint val)
 	{
 		glUniform1i(glGetUniformLocation(m_ID, name.c_str()), val);
+	}
+
+	void ShaderProgram::setMatrix4(const std::string& name, const glm::mat4& matrix)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	bool ShaderProgram::CreateShader(const std::string& source, const GLenum shaderType, GLuint& shaderID)

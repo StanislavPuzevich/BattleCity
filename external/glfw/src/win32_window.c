@@ -104,7 +104,7 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, GLFWbool ico
     int i;
     HDC dc;
     HICON handle;
-    HBITMAP color, mask;
+    HBITMAP colors, mask;
     BITMAPV5HEADER bi;
     ICONINFO ii;
     unsigned char* target = NULL;
@@ -123,7 +123,7 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, GLFWbool ico
     bi.bV5AlphaMask   = 0xff000000;
 
     dc = GetDC(NULL);
-    color = CreateDIBSection(dc,
+    colors = CreateDIBSection(dc,
                              (BITMAPINFO*) &bi,
                              DIB_RGB_COLORS,
                              (void**) &target,
@@ -131,7 +131,7 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, GLFWbool ico
                              (DWORD) 0);
     ReleaseDC(NULL, dc);
 
-    if (!color)
+    if (!colors)
     {
         _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
                              "Win32: Failed to create RGBA bitmap");
@@ -143,7 +143,7 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, GLFWbool ico
     {
         _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
                              "Win32: Failed to create mask bitmap");
-        DeleteObject(color);
+        DeleteObject(colors);
         return NULL;
     }
 
@@ -162,11 +162,11 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, GLFWbool ico
     ii.xHotspot = xhot;
     ii.yHotspot = yhot;
     ii.hbmMask  = mask;
-    ii.hbmColor = color;
+    ii.hbmColor = colors;
 
     handle = CreateIconIndirect(&ii);
 
-    DeleteObject(color);
+    DeleteObject(colors);
     DeleteObject(mask);
 
     if (!handle)
@@ -368,7 +368,7 @@ static void updateWindowStyles(const _GLFWwindow* window)
 static void updateFramebufferTransparency(const _GLFWwindow* window)
 {
     BOOL composition, opaque;
-    DWORD color;
+    DWORD colors;
 
     if (!IsWindowsVistaOrGreater())
         return;
@@ -377,7 +377,7 @@ static void updateFramebufferTransparency(const _GLFWwindow* window)
        return;
 
     if (IsWindows8OrGreater() ||
-        (SUCCEEDED(DwmGetColorizationColor(&color, &opaque)) && !opaque))
+        (SUCCEEDED(DwmGetColorizationColor(&colors, &opaque)) && !opaque))
     {
         HRGN region = CreateRectRgn(0, 0, -1, -1);
         DWM_BLURBEHIND bb = {0};
@@ -1907,7 +1907,7 @@ GLFWbool _glfwWindowHoveredWin32(_GLFWwindow* window)
 GLFWbool _glfwFramebufferTransparentWin32(_GLFWwindow* window)
 {
     BOOL composition, opaque;
-    DWORD color;
+    DWORD colors;
 
     if (!window->win32.transparent)
         return GLFW_FALSE;
@@ -1924,7 +1924,7 @@ GLFWbool _glfwFramebufferTransparentWin32(_GLFWwindow* window)
         //       colorization color is opaque, because otherwise the window
         //       contents is blended additively with the previous frame instead
         //       of replacing it
-        if (FAILED(DwmGetColorizationColor(&color, &opaque)) || opaque)
+        if (FAILED(DwmGetColorizationColor(&colors, &opaque)) || opaque)
             return GLFW_FALSE;
     }
 
