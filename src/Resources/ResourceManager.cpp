@@ -64,7 +64,7 @@ std::string ResourceManager::getFileString(const std::string& relativeFilePath) 
 	if (!f.is_open())
 	{
 		std::cerr << "Failed to open " << relativeFilePath << " file!" << std::endl;
-		return std::string();
+		return std::string{};
 	}
 
 	std::stringstream buff;
@@ -118,8 +118,9 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite
 	(const std::string& spriteName, 
 	 const std::string& textureName, 
 	 const std::string& shaderName, 
-	 const unsigned int spriteWidth, 
-	 const unsigned int spriteHeight)
+	 const unsigned spriteWidth, 
+	 const unsigned spriteHeight,
+	 const std::string& subTextureName)
 {
 	auto pTexture = getTexture(textureName);
 	if (!pTexture)
@@ -136,7 +137,7 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite
 	}
 
 	std::shared_ptr<Renderer::Sprite>& newSprite = m_sprites.emplace(textureName,
-		std::make_shared<Renderer::Sprite>(pTexture, pShaderProgram, glm::vec2(0.f, 0.f), glm::vec2(spriteWidth, spriteHeight))).first->second;
+		std::make_shared<Renderer::Sprite>(pTexture, subTextureName, pShaderProgram, glm::vec2(0.f, 0.f), glm::vec2(spriteWidth, spriteHeight))).first->second;
 		
 	return newSprite;
 }
@@ -150,4 +151,36 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const std::string& 
 	}
 
 	return m_sprites[spriteName];
+}
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(const std::string& textureName, const std::string& texturePath,
+	std::vector<std::string> subTextures, const unsigned subTextureWidth, const unsigned subTextureHeight)
+{
+	auto pTexture = loadTexture(textureName, texturePath);
+
+	if (pTexture)
+	{
+		const unsigned textureWidth = pTexture->width();
+		const unsigned textureHeight = pTexture->height();
+		unsigned currentTextureOffsetX = 0;
+		unsigned currentTextureOffsetY = textureHeight;          
+
+		for (const auto& currentSubTextureName : subTextures)
+		{
+			glm::vec2 leftBottomUV(static_cast<float>(currentTextureOffsetX) / textureWidth,
+								   static_cast<float>(currentTextureOffsetY - subTextureHeight) / textureHeight);
+			glm::vec2 rightTopUV(static_cast<float>(currentTextureOffsetX + subTextureWidth) / textureWidth,
+								 static_cast<float>(currentTextureOffsetY) / textureHeight);
+			pTexture->addSubTexture(currentSubTextureName, leftBottomUV, rightTopUV);
+			
+			currentTextureOffsetX += subTextureWidth;
+			if (currentTextureOffsetX >= textureWidth)
+			{
+				currentTextureOffsetX = 0;
+				currentTextureOffsetY -= subTextureHeight;
+			}
+		}
+	} 
+
+	return pTexture;
 }

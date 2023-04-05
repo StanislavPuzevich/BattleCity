@@ -7,15 +7,16 @@
 
 namespace Renderer
 {
-	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture2D,
+	Sprite::Sprite(const std::shared_ptr<Texture2D> pTexture,
+		std::string initialSubTexture,
 		std::shared_ptr<ShaderProgram> pShaderProgram,
 		const glm::vec2& position,
 		const glm::vec2& size,
 		const float rotation)
-		:m_pTexture2D(std::move(pTexture2D)), m_pShaderProgram(std::move(pShaderProgram)), m_position(position), m_size(size), m_rotation(rotation)
+		:m_pTexture(pTexture), m_pShaderProgram(std::move(pShaderProgram)), m_position(position), m_size(size), m_rotation(rotation)
 	{
 		const GLfloat vertexCoords[] = {
-			// 2--3    1    - Example our triangles
+			// 2--3    1    
 			// | /	 / |
 			// 1    3--2
 
@@ -29,15 +30,17 @@ namespace Renderer
 			0.f,0.f
 		};
 
+		auto subTexture = pTexture->getSubTexture(std::move(initialSubTexture));
+
 		const GLfloat textureCoords[] = {
 			//U  V
-			0.f,0.f,
-			0.f,1.f,
-			1.f,1.f,
+			subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
+			subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
+			subTexture.rightTopUV.x, subTexture.rightTopUV.y,
 
-			1.f,1.f,
-			1.f,0.f,
-			0.f,0.f
+			subTexture.rightTopUV.x, subTexture.rightTopUV.y,
+			subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
+			subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
 		};
 
 		glGenVertexArrays(1, &m_VAO);
@@ -82,7 +85,7 @@ namespace Renderer
 		m_pShaderProgram->setMatrix4("modelMat", model);
 
 		glActiveTexture(GL_TEXTURE0);
-		m_pTexture2D->bind(); 
+		m_pTexture->bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);

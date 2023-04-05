@@ -46,14 +46,28 @@ void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int
     }
 }
 
+void error_callback(int error, const char* msg) {
+    std::string s;
+    s = " [" + std::to_string(error) + "] " + msg + '\n';
+    std::cerr << s << std::endl;
+}
+
 int main(int argc, char** argv)
 {
     /* Initialize the library */
+    glfwSetErrorCallback(error_callback);
     if (!glfwInit())
     {
         std::cerr << "glfwInit failed!" << std::endl;
         return -1;
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* pWindow = glfwCreateWindow(g_WindowSize.x, g_WindowSize.y, "Battle City", nullptr, nullptr);
@@ -100,7 +114,10 @@ int main(int argc, char** argv)
 
         auto pTex = resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
-        auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTexture", "SpriteShader", 50, 100);
+        std::vector<std::string> subTexturesNames = { "block","topBlock", "bottomBlock", "leftBlock", "rightBlock", " topLeftBlock", "topRightBlock", "bottomLeftBlock", "bottomRigntBlock", "beton" };
+        auto pTextureAtlas = resourceManager.loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png", subTexturesNames, 16, 16);
+
+        auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "rightBlock");
         pSprite->setPosition(glm::vec2(300, 100));
 
         // We need to send the information about shaders to the memory of the video card
