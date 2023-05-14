@@ -10,6 +10,7 @@ namespace Renderer
 	class ShaderProgram;
 	class Texture2D;
 	class Sprite;
+	class AnimatedSprite;
 }
 
 
@@ -33,13 +34,21 @@ public:
 
 	std::shared_ptr<Renderer::Sprite> loadSprite(const std::string& spriteName,	
 												 const std::string& textureName,
-												 const std::string& shaderName, 
-		                                         const unsigned spriteWidth,
+												 const std::string& shaderName,
+												 const unsigned spriteWidth,
 												 const unsigned spriteHeight,
 												 const std::string& subTextureName = "default");
 	std::shared_ptr<Renderer::Sprite> getSprite(const std::string& spriteName);
 
-	std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(const std::string& textureName, const std::string& texturePath,
+	std::shared_ptr<Renderer::AnimatedSprite> loadAnimatedSprite(const std::string& spriteName,
+																 const std::string& textureName,
+																 const std::string& shaderName,
+																 const unsigned spriteWidth,
+																 const unsigned spriteHeight,
+																 const std::string& subTextureName = "default");
+	std::shared_ptr<Renderer::AnimatedSprite> getAnimatedSprite(const std::string& spriteName);
+
+	std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(std::string textureName, std::string texturePath,
 														  const std::vector<std::string> subTextures,
 														  const unsigned subTextureWidth, const unsigned subTextureHeight);
 
@@ -54,6 +63,9 @@ private:
 
 	typedef std::map<const std::string, std::shared_ptr<Renderer::Sprite>> SpritesMap;
 	SpritesMap m_sprites;
+
+	typedef std::map<const std::string, std::shared_ptr<Renderer::AnimatedSprite>> AnimatedSpritesMap;
+	AnimatedSpritesMap m_animatedSprites;
 
 	std::string m_Path;
 };
