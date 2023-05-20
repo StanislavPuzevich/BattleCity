@@ -17,7 +17,7 @@ namespace Renderer
 			const glm::vec2& size = glm::vec2(1.f),
 			const float rotation = 0.f);
 
-		void insertState(std::string state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration)	// maybe the refernces aren't needed
+		void insertState(std::string state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration)
 			{ m_statesMap.emplace(std::move(state), std::move(subTexturesDuration)); }
 		void render() const override;
 		void setState(const std::string& newState);

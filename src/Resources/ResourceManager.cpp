@@ -12,10 +12,25 @@
 #define STBI_ONLY_PNG
 #include "stb_image.h"
 
-ResourceManager::ResourceManager(const std::string& executablePath)
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
+ResourceManager::TexturesMap ResourceManager::m_textures;
+ResourceManager::SpritesMap ResourceManager::m_sprites;
+ResourceManager::AnimatedSpritesMap ResourceManager::m_animatedSprites;
+std::string ResourceManager::m_Path;
+
+void ResourceManager::setExecutablePath(const std::string& executablePath)
 {
 	size_t found = executablePath.find_last_of("/\\");
 	m_Path = executablePath.substr(0, found);
+}
+
+void ResourceManager::unloadAllReasources()
+{
+	m_shaderPrograms.clear();
+	m_textures.clear();
+	m_sprites.clear();
+	m_animatedSprites.clear();
+	m_Path.clear();
 }
 
 std::shared_ptr<Renderer::ShaderProgram>
@@ -58,7 +73,7 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const
 	return m_shaderPrograms[shaderName];
 }
 
-std::string ResourceManager::getFileString(const std::string& relativeFilePath) const
+std::string ResourceManager::getFileString(const std::string& relativeFilePath)
 {
 	std::ifstream f;
 	f.open(m_Path + "/" + relativeFilePath, std::ios::in | std::ios::binary);
@@ -137,7 +152,7 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprite
 		return nullptr;
 	}
 
-	std::shared_ptr<Renderer::Sprite>& newSprite = m_sprites.emplace(textureName,
+	std::shared_ptr<Renderer::Sprite>& newSprite = m_sprites.emplace(spriteName,
 		std::make_shared<Renderer::Sprite>(pTexture, subTextureName, pShaderProgram, glm::vec2(0.f, 0.f), glm::vec2(spriteWidth, spriteHeight))).first->second;
 		
 	return newSprite;
@@ -165,7 +180,7 @@ std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite
 		return nullptr;
 	}
 
-	std::shared_ptr<Renderer::AnimatedSprite>& newAnimatedSprite = m_animatedSprites.emplace(textureName,
+	std::shared_ptr<Renderer::AnimatedSprite>& newAnimatedSprite = m_animatedSprites.emplace(spriteName,
 		std::make_shared<Renderer::AnimatedSprite>(pTexture, subTextureName, pShaderProgram, glm::vec2(0.f, 0.f), glm::vec2(spriteWidth, spriteHeight))).first->second;
 
 	return newAnimatedSprite;

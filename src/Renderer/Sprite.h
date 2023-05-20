@@ -24,7 +24,7 @@ namespace Renderer
 		Sprite (const Sprite&) = delete;
 		Sprite& operator=(const Sprite&) = delete;
 
-		~Sprite();
+		virtual ~Sprite();
 
 		virtual void render() const;
 		void setPosition(const glm::vec2& position) { m_position = position; };
