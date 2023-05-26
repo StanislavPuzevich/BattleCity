@@ -3,8 +3,11 @@
 #include <glm/vec2.hpp>
 
 #include <array>
+#include <memory>
 
 constexpr unsigned MAX_KEY_NUMBER = 349;
+
+class Tank;
 
 class Game
 {
@@ -28,4 +31,5 @@ private:
 
     glm::ivec2 m_WindowSize;
     EGameState m_eCurrentGaneState;
+    std::unique_ptr<Tank> m_pTank;
 };
