@@ -16,18 +16,15 @@ namespace Renderer
 		:m_pTexture(std::move(pTexture)), m_pShaderProgram(std::move(pShaderProgram)), m_position(position), m_size(size), m_rotation(rotation)
 	{
 		const GLfloat vertexCoords[] = {
-			// 2--3    1    
-			// | /	 / |
-			// 1    3--2
+			// 1---2    
+			// | / |
+			// 0---3
 
 			//X  Y
 			0.f,0.f,
 			0.f,1.f,
 			1.f,1.f,
-
-			1.f,1.f,
 			1.f,0.f,
-			0.f,0.f
 		};
 
 		auto subTexture = m_pTexture->getSubTexture(std::move(initialSubTexture));
@@ -37,35 +34,37 @@ namespace Renderer
 			subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
 			subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
 			subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-
-			subTexture.rightTopUV.x, subTexture.rightTopUV.y,
 			subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
-			subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
+		};
+
+		const GLint indices[] = {
+			0, 1, 2,
+			2, 3, 0
 		};
 
 		glGenVertexArrays(1, &m_VAO);
 		glBindVertexArray(m_VAO);
 
-		glGenBuffers(1, &m_vertexCoordsVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexCoordsVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), &vertexCoords, GL_STATIC_DRAW);
+		m_vertexCoordsBuffer.init(vertexCoords, sizeof(vertexCoords));
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-		glGenBuffers(1, &m_textureCoordsVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), &textureCoords, GL_STATIC_DRAW);glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), &textureCoords, GL_STATIC_DRAW);
+		m_texturesCoordsBuffer.init(textureCoords, sizeof(textureCoords));
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_indexBuffer.init(indices, sizeof(indices));
+
+		m_texturesCoordsBuffer.unbind();
 		glBindVertexArray(0);
+		m_indexBuffer.unbind();
 	}
 
 	Sprite::~Sprite()
 	{
 		glDeleteBuffers(1, &m_vertexCoordsVBO);
 		glDeleteBuffers(1, &m_textureCoordsVBO);
+		glDeleteBuffers(1, &m_EBO);
 		glDeleteVertexArrays(1, &m_VAO);
 	}
 
@@ -85,6 +84,7 @@ namespace Renderer
 		m_pShaderProgram->setMatrix4("modelMat", model);
 
 		glActiveTexture(GL_TEXTURE0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		m_pTexture->bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
