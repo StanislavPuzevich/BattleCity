@@ -62,9 +62,6 @@ namespace Renderer
 
 	Sprite::~Sprite()
 	{
-		glDeleteBuffers(1, &m_vertexCoordsVBO);
-		glDeleteBuffers(1, &m_textureCoordsVBO);
-		glDeleteBuffers(1, &m_EBO);
 		glDeleteVertexArrays(1, &m_VAO);
 	}
 

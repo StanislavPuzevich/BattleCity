@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-extern glm::ivec2 g_WindowSize;
-
 namespace Renderer
 {
 	AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture2D> pTexture,

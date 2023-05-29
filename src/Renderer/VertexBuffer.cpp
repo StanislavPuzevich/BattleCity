@@ -2,15 +2,6 @@
 
 namespace Renderer
 {
-    VertexBuffer::VertexBuffer() : m_id(0)
-    {
-    }
-
-    VertexBuffer::~VertexBuffer()
-    {
-        glDeleteBuffers(1, &m_id);
-    }
-
     VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept
     {
         m_id = vertexBuffer.m_id;

@@ -7,8 +7,8 @@ namespace Renderer
     class VertexBuffer
     {
     public:
-        VertexBuffer();
-        ~VertexBuffer();
+        VertexBuffer() : m_id(0) {}
+        ~VertexBuffer() { glDeleteBuffers(1, &m_id); }
 
         VertexBuffer(const VertexBuffer&) = delete;
         VertexBuffer& operator=(const VertexBuffer&) = delete;

@@ -40,14 +40,10 @@ namespace Renderer
 		glm::vec2 m_position;
 		glm::vec2 m_size;
 		float m_rotation;
+		GLuint m_VAO;
 
 		VertexBuffer m_vertexCoordsBuffer;
 		VertexBuffer m_texturesCoordsBuffer;
 		IndexBuffer m_indexBuffer;
-
-		GLuint m_VAO;
-		GLuint m_vertexCoordsVBO;
-		GLuint m_textureCoordsVBO;
-		GLuint m_EBO;
 	};
 }
