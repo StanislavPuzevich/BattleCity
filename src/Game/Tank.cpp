@@ -53,7 +53,14 @@ void Tank::update(const uint64_t delta)
 {
     if (m_move == false) return;
 
-    m_position += delta * m_velocity * m_moveOfset;
+    if (m_position.x < 555 && m_position.x > -10 && m_position.y < 388 && m_position.y > -10)
+        m_position += delta * m_velocity * m_moveOfset;
+    else if (m_position.x >= 555) m_position.x = 554;
+    else if (m_position.x <= -10) m_position.x = -9;
+    else if (m_position.y >= 388) m_position.y = 387;
+    else if (m_position.y <= -10) m_position.y = -9;
+
     m_pSpite->setPosition(m_position);
     m_pSpite->update(delta);
+
 }

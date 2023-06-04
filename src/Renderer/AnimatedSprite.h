@@ -24,11 +24,11 @@ namespace Renderer
 		void update(const uint64_t delta);
 
 	private:
-		// this data structure store "State name" like string and "Subtexture name" + "Duration" like pairs of vector
+		//this data structure store "State name" like string and "Subtexture name" + "Duration" like pairs of vector
 		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>> m_statesMap;
 		size_t m_currentFrame = 0;
 		uint64_t m_currentAnimationTime = 0;
-		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>>::const_iterator m_pCurrentAnimationDuration;
+		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>>::const_iterator m_pCurrentAnimationDurations;
 		mutable bool m_dirty = false;
 	};
 }

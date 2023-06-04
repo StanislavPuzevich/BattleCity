@@ -13,7 +13,11 @@ namespace Renderer
 		const glm::vec2& position,
 		const glm::vec2& size,
 		const float rotation)
-		:m_pTexture(std::move(pTexture)), m_pShaderProgram(std::move(pShaderProgram)), m_position(position), m_size(size), m_rotation(rotation)
+		:m_pTexture(std::move(pTexture)),
+		m_pShaderProgram(std::move(pShaderProgram)),
+		m_position(position),
+		m_size(size), 
+		m_rotation(rotation)
 	{
 		const GLfloat vertexCoords[] = {
 			// 1---2    
@@ -42,27 +46,20 @@ namespace Renderer
 			2, 3, 0
 		};
 
-		glGenVertexArrays(1, &m_VAO);
-		glBindVertexArray(m_VAO);
-
 		m_vertexCoordsBuffer.init(vertexCoords, sizeof(vertexCoords));
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+		VertexBufferLayout vertexCoordsLyout;
+		vertexCoordsLyout.addElementLayoutFloat(2, false);
+		m_vertexArray.addBuffer(m_vertexCoordsBuffer, vertexCoordsLyout);
 
-		m_texturesCoordsBuffer.init(textureCoords, sizeof(textureCoords));
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+		m_textureCoordsBuffer.init(textureCoords, sizeof(textureCoords));
+		VertexBufferLayout texturesCoordsLyout;
+		texturesCoordsLyout.addElementLayoutFloat(2, false);
+		m_vertexArray.addBuffer(m_textureCoordsBuffer, texturesCoordsLyout);
 
 		m_indexBuffer.init(indices, sizeof(indices));
 
-		m_texturesCoordsBuffer.unbind();
-		glBindVertexArray(0);
+		m_vertexArray.unbind();
 		m_indexBuffer.unbind();
-	}
-
-	Sprite::~Sprite()
-	{
-		glDeleteVertexArrays(1, &m_VAO);
 	}
 
 	void Sprite::render() const
@@ -77,7 +74,7 @@ namespace Renderer
 		model = glm::translate(model, glm::vec3(-0.5f * m_size.x, -0.5f * m_size.y, 0.f));
 		model = glm::scale(model, glm::vec3(m_size, 1.f));
 
-		glBindVertexArray(m_VAO);
+		m_vertexArray.bind();
 		m_pShaderProgram->setMatrix4("modelMat", model);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -87,4 +84,5 @@ namespace Renderer
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
+		
 }
