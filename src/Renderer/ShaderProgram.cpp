@@ -6,7 +6,7 @@
 
 constexpr GLuint BUFFER_SIZE = 1024;
 
-namespace Renderer
+namespace RenderEngine
 {
 	ShaderProgram::ShaderProgram(const std::string& vertex_shader, const std::string& fragmentShader)
 	{

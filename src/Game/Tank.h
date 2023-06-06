@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <memory>
 
-namespace Renderer
+namespace RenderEngine
 {
     class AnimatedSprite;
 }
@@ -19,7 +19,7 @@ public:
         Right
     };
 
-    Tank(std::shared_ptr<Renderer::AnimatedSprite> pSpite, const float velocity, const glm::vec2& position);
+    Tank(std::shared_ptr<RenderEngine::AnimatedSprite> pSpite, const float velocity, const glm::vec2& position);
 
     void render() const;
     void move(const bool move) { m_move = move; }
@@ -28,7 +28,7 @@ public:
 
 private:
     EOrientation m_eOrientation;
-    std::shared_ptr<Renderer::AnimatedSprite> m_pSpite;
+    std::shared_ptr<RenderEngine::AnimatedSprite> m_pSpite;
     bool m_move;
     float m_velocity;
     glm::vec2 m_position;

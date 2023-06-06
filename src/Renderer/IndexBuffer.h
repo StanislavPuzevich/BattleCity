@@ -2,12 +2,12 @@
 
 #include <glad/glad.h>
 
-namespace Renderer
+namespace RenderEngine
 {
     class IndexBuffer
     {
     public:
-        IndexBuffer() : m_id(0) {}
+        IndexBuffer() : m_id(0), m_count(0) {}
         ~IndexBuffer() { glDeleteBuffers(1, &m_id); }
 
         IndexBuffer(const IndexBuffer&) = delete;
@@ -16,11 +16,13 @@ namespace Renderer
         IndexBuffer(IndexBuffer&& indexBuffer) noexcept;
         IndexBuffer& operator=(IndexBuffer&& indexBuffer) noexcept;
 
-        void init(const void* data, const unsigned size);
+        unsigned getCount() const { return m_count; }
+        void init(const void* data, const unsigned count);
         void bind() const;
         void unbind() const;
 
     private:
         GLuint m_id;
+        unsigned m_count;
     };
 }
