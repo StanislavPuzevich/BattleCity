@@ -53,6 +53,7 @@ public:
 																 const std::vector<std::string> subTextures,
 																 const unsigned subTextureWidth,
 																 const unsigned subTextureHeight);
+	static bool loadJSONResources(const std::string& JSONPath);
 
 private:
 	static std::string getFileString(const std::string& relativeFilePath);
