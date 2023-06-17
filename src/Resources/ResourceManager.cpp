@@ -330,5 +330,19 @@ bool ResourceManager::loadJSONResources(const std::string& JSONPath)
 		}
 	}
 
+	// for parsing map data
+	auto levelsIt = document.FindMember("levels");
+	if (levelsIt != document.MemberEnd())
+	{
+		for (const auto& currentrLevel : levelsIt->value.GetArray())
+		{
+			const auto description = currentrLevel["description"].GetArray();
+			std::vector<std::string> levelRows;
+			levelRows.reserve(description.Size());
+			for (const auto& currentStr : description)
+				levelRows.emplace_back(currentStr.GetString());
+		}
+	}
+
 	return true;
 }
