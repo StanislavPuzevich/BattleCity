@@ -30,8 +30,15 @@ add_executable(${PROJECT_NAME}
 
 	src/Game/Game.h
 	src/Game/Game.cpp
-	src/Game/Tank.h
-	src/Game/Tank.cpp)
+	src/Game/Level.h
+	src/Game/Level.cpp
+
+	src/Game/GameObjects/Tank.h
+	src/Game/GameObjects/Tank.cpp
+	src/Game/GameObjects/IGameObject.h
+	src/Game/GameObjects/IGameObject.cpp
+	src/Game/GameObjects/BrickWall.h
+	src/Game/GameObjects/BrickWall.cpp)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 

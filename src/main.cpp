@@ -8,8 +8,8 @@
 #include "Game/Game.h"
 #include "Renderer/Renderer.h"
 
-glm::ivec2 g_WindowSize(640, 480);
-Game g_game(g_WindowSize);
+glm::ivec2 g_WindowSize(13 * 16, 14 * 16);
+std::unique_ptr<Game> g_game = std::make_unique<Game>(g_WindowSize);
 
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
@@ -24,7 +24,7 @@ void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int
     {
         glfwSetWindowShouldClose(pWindow, GL_TRUE);
     }
-    g_game.setKey(key, action);
+    g_game->setKey(key, action);
 }
 
 void error_callback(int error, const char* msg) 
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 
     {
         ResourceManager::setExecutablePath(argv[0]);
-        g_game.init();
+        g_game->init();
 
         auto lastTime = std::chrono::high_resolution_clock::now();
 
@@ -90,12 +90,12 @@ int main(int argc, char** argv)
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
             lastTime = currentTime;
 
-            g_game.update(duration);
+            g_game->update(duration);
 
             /* Render here */
             RenderEngine::Renderer::clear();
 
-            g_game.render();
+            g_game->render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);

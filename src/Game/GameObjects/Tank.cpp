@@ -1,20 +1,9 @@
 #include "Tank.h"
-#include "../Renderer/AnimatedSprite.h"
+#include "../../Renderer/AnimatedSprite.h"
 
-Tank::Tank(std::shared_ptr<RenderEngine::AnimatedSprite> pSpite, const float velocity, const glm::vec2& position)
-    : m_eOrientation(EOrientation::Top),
-      m_pSpite(pSpite), 
-      m_move(false), 
-      m_velocity(velocity), 
-      m_position(position),
-      m_moveOfset(glm::vec2(0.f, 1.f))
-{
-
-}
-
-void Tank::render() const 
+void Tank::render() const
 { 
-    m_pSpite->render();
+    m_pSpite->render(m_position, m_size, m_rotation);
 }
 
 void Tank::setOrientation(const EOrientation eOrientation)
@@ -60,7 +49,5 @@ void Tank::update(const uint64_t delta)
     else if (m_position.y >= 388) m_position.y = 387;
     else if (m_position.y <= -10) m_position.y = -9;
 
-    m_pSpite->setPosition(m_position);
     m_pSpite->update(delta);
-
 }

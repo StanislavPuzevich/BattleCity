@@ -1,11 +1,11 @@
 #include "Game.h"
-
 #include "../Resources/ResourceManager.h"
 #include "../Renderer/Sprite.h"
 #include "../Renderer/AnimatedSprite.h"
 #include "../Renderer/ShaderProgram.h"
 
-#include "Tank.h"
+#include "GameObjects/Tank.h"
+#include "Level.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>
@@ -22,13 +22,14 @@ Game::~Game() {}
 
 void Game::render()
 {
-    ResourceManager::getAnimatedSprite("NewAnimatedSprite")->render();
     if (m_pTank) m_pTank->render();
+    if (m_pLevel) m_pLevel->render();
 }
 
 void Game::update(const uint64_t delta)
 {
-    ResourceManager::getAnimatedSprite("NewAnimatedSprite")->update(delta);
+    if (m_pLevel) m_pLevel->update(delta);
+
     if (m_pTank)
     {
         if (m_keys[GLFW_KEY_W])
@@ -72,38 +73,19 @@ bool Game::init()
 
     auto pTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
 
-    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "mapTextureAtlas", "spriteShader", 100, 100, "rightBlock");
-    pAnimatedSprite->setPosition(glm::vec2(300, 300));
-
-    std::vector<std::pair<std::string, uint64_t>> waterState;
-    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water1", 1000000000));
-    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water2", 1000000000));
-    waterState.emplace_back(std::make_pair<std::string, uint64_t>("water3", 1000000000));
-
-    std::vector<std::pair<std::string, uint64_t>> eagleState;
-    eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle", 1000000000));
-    eagleState.emplace_back(std::make_pair<std::string, uint64_t>("deadeagle", 1000000000));
-
-    pAnimatedSprite->insertState("waterState", std::move(waterState));
-    pAnimatedSprite->insertState("eagleState", std::move(eagleState));
-
-    pAnimatedSprite->setState("waterState");
-
-
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_WindowSize.x), 0.f, static_cast<float>(m_WindowSize.y), -100.f, 100.f);
 
     pSpriteShaderProgram->use();
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-
     // for tanks
     auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
 
     auto pTanksAnimatedSprite = ResourceManager::getAnimatedSprite("tankAnimatedSprite");
-    pTanksAnimatedSprite->setPosition(glm::vec2(100, 100));
 
-    m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001, glm::vec2(100.f, 100.f));
+    m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001, glm::vec2(100.f, 100.f), glm::vec2(16.f, 16.f));
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
 
     return true;
 }
