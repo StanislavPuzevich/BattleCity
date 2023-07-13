@@ -15,7 +15,25 @@ void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
     g_WindowSize.x = width;
     g_WindowSize.y = height;
-    RenderEngine::Renderer::setViewport(width, height);
+
+    const float map_aspect_ratio = 13.f / 14.f;
+    unsigned viewPortWidth = g_WindowSize.x;
+    unsigned viewPortHeight = g_WindowSize.y;
+    unsigned viewPortLeftOffset = 0;
+    unsigned viewPortBottomtOffset = 0;
+
+    if (static_cast<float>(g_WindowSize.x) / g_WindowSize.y > map_aspect_ratio)
+    {
+        viewPortWidth = static_cast<unsigned>(g_WindowSize.y * map_aspect_ratio);
+        viewPortLeftOffset = (g_WindowSize.x - viewPortWidth) / 2;
+    }
+    else
+    {
+        viewPortHeight = static_cast<unsigned>(g_WindowSize.y / map_aspect_ratio);
+        viewPortBottomtOffset = (g_WindowSize.y - viewPortHeight) / 2;
+    }
+
+    RenderEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomtOffset);
 }
 
 void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
