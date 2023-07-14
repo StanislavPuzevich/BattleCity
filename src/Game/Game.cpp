@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "../Resources/ResourceManager.h"
 #include "../Renderer/Sprite.h"
-#include "../Renderer/AnimatedSprite.h"
 #include "../Renderer/ShaderProgram.h"
 
 #include "GameObjects/Tank.h"
@@ -79,12 +78,11 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    // for tanks
-    auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
-
-    auto pTanksAnimatedSprite = ResourceManager::getAnimatedSprite("tankAnimatedSprite");
-
-    m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001, glm::vec2(100.f, 100.f), glm::vec2(16.f, 16.f));
+    m_pTank = std::make_unique<Tank>(ResourceManager::getSprite("tankSprite_top"),
+                                     ResourceManager::getSprite("tankSprite_bottom"), 
+                                     ResourceManager::getSprite("tankSprite_left"), 
+                                     ResourceManager::getSprite("tankSprite_right"), 
+                                     0.0000001, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
 
     return true;
