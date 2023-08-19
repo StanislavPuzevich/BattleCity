@@ -16,7 +16,7 @@ class ResourceManager
 {
 public:
 	static void setExecutablePath(const std::string& executablePath);
-	static void unloadAllReasources();
+	static void unloadAllResources();
 
 	ResourceManager() = delete;
 	~ResourceManager() = delete;

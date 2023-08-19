@@ -9,7 +9,7 @@ namespace RenderEngine
     class SpriteAnimator
     {
     public:
-        SpriteAnimator(std::shared_ptr<Sprite>(pSprite));
+        SpriteAnimator(std::shared_ptr<Sprite> pSprite);
         size_t getCurrentFrame() const { return m_currentFrame; }
         void update(const uint64_t delta);
 

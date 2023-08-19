@@ -70,19 +70,13 @@ bool Game::init()
 
     auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShader");
 
-    auto pTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
-
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_WindowSize.x), 0.f, static_cast<float>(m_WindowSize.y), -100.f, 100.f);
 
     pSpriteShaderProgram->use();
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    m_pTank = std::make_unique<Tank>(ResourceManager::getSprite("tankSprite_top"),
-                                     ResourceManager::getSprite("tankSprite_bottom"), 
-                                     ResourceManager::getSprite("tankSprite_left"), 
-                                     ResourceManager::getSprite("tankSprite_right"), 
-                                     0.0000001, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
 
     return true;

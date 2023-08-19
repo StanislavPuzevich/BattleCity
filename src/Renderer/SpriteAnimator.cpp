@@ -1,7 +1,7 @@
 #include "SpriteAnimator.h"
 #include "Sprite.h"
 
-RenderEngine::SpriteAnimator::SpriteAnimator(std::shared_ptr<Sprite>(pSprite))
+RenderEngine::SpriteAnimator::SpriteAnimator(std::shared_ptr<Sprite> pSprite)
     : m_pSprite(std::move(pSprite))
     , m_currentFrame(0)
     , m_currentFrameDuration(m_pSprite->getFrameDuration(0))

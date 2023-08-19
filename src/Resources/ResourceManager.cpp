@@ -26,7 +26,7 @@ void ResourceManager::setExecutablePath(const std::string& executablePath)
 	m_Path = executablePath.substr(0, found);
 }
 
-void ResourceManager::unloadAllReasources()
+void ResourceManager::unloadAllResources()
 {
 	m_shaderPrograms.clear();
 	m_textures.clear();
@@ -250,7 +250,7 @@ bool ResourceManager::loadJSONResources(const std::string& JSONPath)
 				subTextures.emplace_back(currentSubTexture.GetString());
 			}
 
-			loadTextureAtlas(name, filePath, subTextures, subTextureWidth, subTextureHeight);
+			loadTextureAtlas(name, filePath, std::move(subTextures), subTextureWidth, subTextureHeight);
 		}
 	}
 
@@ -282,7 +282,7 @@ bool ResourceManager::loadJSONResources(const std::string& JSONPath)
 					frameDescriptions.emplace_back(pSubTexture.leftBottomUV, pSubTexture.rightTopUV, duration);
 				}
 
-				pSprite->insertFrames(frameDescriptions);
+				pSprite->insertFrames(std::move(frameDescriptions));
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "IGameObject.h"
+#include "../../Resources/ResourceManager.h"
 #include "../../Renderer/SpriteAnimator.h"
 
 namespace RenderEngine
@@ -22,19 +23,13 @@ public:
         Right
     };
 
-    Tank(std::shared_ptr<RenderEngine::Sprite> pSpite_top,
-         std::shared_ptr<RenderEngine::Sprite> pSpite_bottom,
-         std::shared_ptr<RenderEngine::Sprite> pSpite_left,
-         std::shared_ptr<RenderEngine::Sprite> pSpite_right,
-         const float velocity, 
-         const glm::vec2& position, 
-         const glm::vec2& size)
+    Tank(const float velocity, const glm::vec2& position, const glm::vec2& size)
         : IGameObject(position, size, 0.f),
           m_eOrientation(EOrientation::Top),
-          m_pSpite_top(std::move(pSpite_top)),
-          m_pSpite_bottom(std::move(pSpite_bottom)),
-          m_pSpite_left(std::move(pSpite_left)),
-          m_pSpite_right(std::move(pSpite_right)),
+          m_pSpite_top(ResourceManager::getSprite("tankSprite_top")),
+          m_pSpite_bottom(ResourceManager::getSprite("tankSprite_bottom")),
+          m_pSpite_left(ResourceManager::getSprite("tankSprite_left")),
+          m_pSpite_right(ResourceManager::getSprite("tankSprite_right")),
           m_spriteAnimator_top(m_pSpite_top),
           m_spriteAnimator_bottom(m_pSpite_bottom),
           m_spriteAnimator_left(m_pSpite_left),

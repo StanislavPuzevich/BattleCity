@@ -5,7 +5,7 @@
 #include <array>
 #include <memory>
 
-constexpr unsigned MAX_KEY_NUMBER = 349;
+const unsigned MAX_KEY_NUMBER = 349;
 
 class Tank;
 class Level;
